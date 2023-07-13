@@ -1,15 +1,21 @@
 package com.example.blackjackformoreplayersmobileapp
 
+import android.icu.number.Scale
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -21,7 +27,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -40,7 +49,8 @@ class MainActivity : ComponentActivity() {
             BlackJackForMorePlayersMobileAppTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    color = MaterialTheme.colorScheme.background,
+
                 ) {
                     BlackJackApp()
                 }
@@ -51,7 +61,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun BlackJackApp() {
-    var page by remember { mutableStateOf("Main menu") }
+    var page by remember { mutableStateOf("MainMenu") }
     fun setPage(string: String) {
         page = string
     }
@@ -59,24 +69,103 @@ fun BlackJackApp() {
     val firedPlayers : MutableList<Player> = mutableListOf()
     val winnerPlayer : MutableList<Player> = mutableListOf()
     val cardsList : MutableList<Card> = Card.generateCardList()
-    when(page) {
-        "Main menu" -> MainMenu()
-        "Rules" -> Rules()
-        "PlayersInput" -> PlayersInput()
-        "Game" -> Game()
-        "Result" -> Result()
+    Box() {
+        Image(painter = painterResource(id = R.drawable.black_jack_menu2), contentDescription = null, contentScale = ContentScale.Crop, modifier = Modifier.fillMaxHeight())
+        when(page) {
+            "MainMenu" -> MainMenu({page = "PlayersInput"}, {page = "Rules"}, {})
+            "Rules" -> Rules()
+            "PlayersInput" -> PlayersInput()
+            "Game" -> Game()
+            "Result" -> Result()
+        }
     }
 }
 
 @Composable
-fun MainMenu() {
+fun MainMenu(
+    onStartButtonClick: () -> Unit,
+    onReadRulesClick: () -> Unit,
+    onEndClick: () -> Unit,
+) {
 
-
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxSize() // delete this later
+    ) {
+        Text(
+            text = stringResource(R.string.blackjack_title),
+            style = MaterialTheme.typography.headlineLarge,
+            fontSize = 70.sp,
+        )
+        Button(
+            onClick = { onStartButtonClick() },
+            modifier = Modifier
+                .width(250.dp)
+                .padding(top = 40.dp),
+            colors = ButtonDefaults.buttonColors(Color(203, 45, 115))
+        ) {
+            Text(
+                text = stringResource(R.string.start),
+                fontWeight = FontWeight.Bold
+            )
+        }
+        Button(
+            onClick = { onReadRulesClick() },
+            modifier = Modifier.width(250.dp),
+            colors = ButtonDefaults.buttonColors(Color(53, 61, 108))
+        ) {
+            Text(
+                text = stringResource(R.string.read_the_rules),
+                fontWeight = FontWeight.Bold
+            )
+        }
+        Button(
+            onClick = { onEndClick() },
+            modifier = Modifier.width(250.dp),
+            colors = ButtonDefaults.buttonColors(Color(53, 61, 108))
+        ) {
+            Text(
+                text = stringResource(R.string.end),
+                fontWeight = FontWeight.Bold
+            )
+        }
+    }
 }
 
 @Composable
 fun Rules() {
-
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxSize()
+        ) {
+        Text(
+            text = "There are the rules:",
+            style = MaterialTheme.typography.headlineLarge,
+            fontSize = 40.sp,
+            )
+        Text(
+            text = "1. Black jack players are scored by their total cards value. The player with the highest total cards value wins as long as it doesn't exceed 21. The players with a highest totals than 21 are said to bust.\n\n2. Amount of players that can play is between 2-7.\n\n3 Ace is 11.",
+            modifier = Modifier.padding(top = 30.dp, start = 30.dp, end = 30.dp),
+            textAlign = TextAlign.Justify
+        )
+        Text(
+            text = "",
+            modifier = Modifier.padding(top = 10.dp,start = 30.dp, end = 30.dp),
+            textAlign = TextAlign.Justify
+        )
+        Text(
+            text = "",
+            modifier = Modifier.padding(top = 10.dp, start = 30.dp, end = 30.dp),
+            textAlign = TextAlign.Left,
+        )
+        Text(
+            text = "",
+            modifier = Modifier.padding(top = 10.dp, start = 30.dp, end = 30.dp),
+            textAlign = TextAlign.Left,
+        )
+    }
 }
 
 @Composable
