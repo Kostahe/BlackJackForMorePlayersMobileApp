@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">BlackJackForMorePlayersMobileApp</string>
+    <string name="start">Play now</string>
+    <string name="read_the_rules">Read the rules</string>
+    <string name="end">End</string>
+    <string name="blackjack_title">BlackJack</string>
+</resources>
