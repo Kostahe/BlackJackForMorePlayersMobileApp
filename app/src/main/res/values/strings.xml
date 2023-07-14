@@ -4,4 +4,8 @@
     <string name="read_the_rules">Read the rules</string>
     <string name="end">End</string>
     <string name="blackjack_title">BlackJack</string>
+    <string name="test">Test</string>
+    <string name="input_name_of_player">Input name of player</string>
+    <string name="enter">Enter</string>
+    <string name="input_amount_of_players">Input amount of players</string>
 </resources>
