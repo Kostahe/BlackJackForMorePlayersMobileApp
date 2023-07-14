@@ -8,6 +8,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -73,7 +75,7 @@ fun BlackJackApp() {
         Image(painter = painterResource(id = R.drawable.black_jack_menu2), contentDescription = null, contentScale = ContentScale.Crop, modifier = Modifier.fillMaxHeight())
         when(page) {
             "MainMenu" -> MainMenu({page = "PlayersInput"}, {page = "Rules"}, {})
-            "Rules" -> Rules()
+            "Rules" -> Rules({ page = "MainMenu" })
             "PlayersInput" -> PlayersInput()
             "Game" -> Game()
             "Result" -> Result()
@@ -134,36 +136,33 @@ fun MainMenu(
 }
 
 @Composable
-fun Rules() {
+fun Rules(
+    returnToMainMenu: () -> Unit,
+) {
+    Button(
+        onClick = { returnToMainMenu() },
+        modifier = Modifier.padding(start = 20.dp, top = 50.dp),
+
+    ) {
+        Text(
+            text = "Return to main menu",
+            )
+    }
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxSize()
         ) {
         Text(
-            text = "There are the rules:",
+            text = "The rules",
             style = MaterialTheme.typography.headlineLarge,
-            fontSize = 40.sp,
+            fontSize = 50.sp,
+            modifier = Modifier.padding(end = 32.dp, start = 19.dp)
             )
         Text(
-            text = "1. Black jack players are scored by their total cards value. The player with the highest total cards value wins as long as it doesn't exceed 21. The players with a highest totals than 21 are said to bust.\n\n2. Amount of players that can play is between 2-7.\n\n3 Ace is 11.",
-            modifier = Modifier.padding(top = 30.dp, start = 30.dp, end = 30.dp),
-            textAlign = TextAlign.Justify
-        )
-        Text(
-            text = "",
-            modifier = Modifier.padding(top = 10.dp,start = 30.dp, end = 30.dp),
-            textAlign = TextAlign.Justify
-        )
-        Text(
-            text = "",
-            modifier = Modifier.padding(top = 10.dp, start = 30.dp, end = 30.dp),
-            textAlign = TextAlign.Left,
-        )
-        Text(
-            text = "",
-            modifier = Modifier.padding(top = 10.dp, start = 30.dp, end = 30.dp),
-            textAlign = TextAlign.Left,
+            text = "1. Black jack players are scored by their total cards value. The player with the highest total cards value wins as long as it doesn't exceed 21. The players with a highest totals than 21 are said to bust.\n\n2. Amount of players that can play is between 2-7.\n\n3. Ace is 11.",
+            modifier = Modifier.padding(top = 30.dp, start = 30.dp, end = 25.dp),
+            textAlign = TextAlign.Justify,
         )
     }
 }
