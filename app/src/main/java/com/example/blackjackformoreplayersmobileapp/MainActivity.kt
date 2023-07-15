@@ -10,6 +10,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -227,6 +228,52 @@ fun Game() {
             }
         }
         "Game" -> {
+            val loosePlayersList = remember { mutableStateListOf<Player>() }
+            val firedPlayersList = remember { mutableStateListOf<Player>() }
+            val winnerPlayersList = remember { mutableStateListOf<Player>() }
+            val cardsList = Card.generateCardList()
+            var playerCount by remember { mutableStateOf(0) }
+            var player by remember { mutableStateOf(playerList[playerCount]) }
+
+
+            player = playerList[playerCount]
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier.fillMaxSize(),
+            ) {
+                Text(text = player.name + " now plays!")
+                Text(text = "Your cards are: ")
+
+                player.cardCollection.forEach() { card ->
+                    Text(text = card.toString())
+                }
+                Text(text = "Suma is: " + player.sumaValueCards)
+                if (player.sumaValueCards <= 21) {
+                    Row {
+                        Button(onClick = { player.takeCard(cardsList) }) {
+
+                        }
+                        Button(onClick = {
+                            playerCount++
+                            player = playerList[playerCount]
+                        }
+                        ) {
+
+                        }
+                        Button(onClick = { /*TODO*/ }) {
+
+                        }
+                    }
+
+                }
+
+            }
+
+
+
+
+
 
         }
     }
