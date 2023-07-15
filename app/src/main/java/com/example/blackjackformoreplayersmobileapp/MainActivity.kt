@@ -233,10 +233,8 @@ fun Game() {
             val winnerPlayersList = remember { mutableStateListOf<Player>() }
             val cardsList = Card.generateCardList()
             var playerCount by remember { mutableStateOf(0) }
-            var player by remember { mutableStateOf(playerList[playerCount]) }
+            var player by remember(playerCount) { mutableStateOf(playerList[playerCount]) }
 
-
-            player = playerList[playerCount]
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
@@ -251,15 +249,17 @@ fun Game() {
                 Text(text = "Suma is: " + player.sumaValueCards)
                 if (player.sumaValueCards <= 21) {
                     Row {
-                        Button(onClick = { player.takeCard(cardsList) }) {
-
+                        Button(onClick = {
+                            player.takeCard(cardsList)
+                        }) {
+                            Text(text = "Hit")
                         }
                         Button(onClick = {
                             playerCount++
                             player = playerList[playerCount]
                         }
                         ) {
-
+//                            Text(text = )
                         }
                         Button(onClick = { /*TODO*/ }) {
 
