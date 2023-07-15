@@ -27,8 +27,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -47,14 +45,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.view.WindowCompat
 import com.example.blackjackformoreplayersmobileapp.ui.theme.BlackJackForMorePlayersMobileAppTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        WindowCompat.setDecorFitsSystemWindows(window, false)
-        val activityKiller: () -> Unit = {this.finish()}
         setContent {
             BlackJackForMorePlayersMobileAppTheme {
                 Surface(
@@ -72,14 +67,11 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun BlackJackApp() {
     var page by remember { mutableStateOf("MainMenu") }
-    fun setPage(string: String) {
-        page = string
-    }
     Box {
         Image(painter = painterResource(id = R.drawable.black_jack_menu2), contentDescription = null, contentScale = ContentScale.Crop, modifier = Modifier.fillMaxHeight())
         when(page) {
             "MainMenu" -> MainMenu({page = "Game"}, {page = "Rules"}, {})
-            "Rules" -> Rules({ page = "MainMenu" })
+            "Rules" -> Rules { page = "MainMenu" }
             "Game" -> Game()
             "Result" -> Result()
         }
@@ -92,11 +84,10 @@ fun MainMenu(
     onReadRulesClick: () -> Unit,
     onEndClick: () -> Unit,
 ) {
-
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxSize() // delete this later
+        modifier = Modifier.fillMaxSize()
     ) {
         Text(
             text = stringResource(R.string.blackjack_title),
@@ -175,16 +166,19 @@ fun Rules(
 @Composable
 fun Game() {
     var gameState by remember { mutableStateOf("Input amount") }
-    val playerList = remember { mutableStateListOf<Player>() }
     var amountOfPlayers by remember { mutableStateOf("") }
+    val playerList = remember { mutableStateListOf<Player>() }
+    val cardsList = Card.generateCardList()
     var nameOfPlayer by remember { mutableStateOf("") }
     var counter by remember { mutableStateOf(0) }
-    val currentPlayerIndex = remember { mutableStateOf(0) }
-    val cardsList = Card.generateCardList()
 
 
-    when (gameState) {
-        "Input amount" ->
+
+
+        when (gameState) {
+
+        "Input amount" -> {
+
             TextFieldWithButton(
                 textFieldLabel = R.string.input_amount_of_players,
                 keyboardOptions = KeyboardOptions.Default.copy(
@@ -195,73 +189,77 @@ fun Game() {
                 onValueChange = {amountOfPlayers = it},
                 onButtonClick = { if(amountOfPlayers.toInt() in 2..7) gameState = "Input name"  }
             )
-        "Input name" -> {
-            TextFieldWithButton(
-                textFieldLabel = R.string.input_name_of_player,
-                textButton = if(counter < amountOfPlayers.toInt()) R.string.enter else R.string.start ,
-                keyboardOptions = KeyboardOptions.Default.copy(
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Done
-                ),
-                value = nameOfPlayer,
-                onValueChange = { nameOfPlayer = it },
-                onButtonClick = {
-                    if (counter == amountOfPlayers.toInt()) {
-                        counter++
+        }
+            "Input name" -> {
+
+                TextFieldWithButton(
+                    textFieldLabel = R.string.input_name_of_player,
+                    textButton = if(counter < amountOfPlayers.toInt()) R.string.enter else R.string.start ,
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Done
+                    ),
+                    value = nameOfPlayer,
+                    onValueChange = { nameOfPlayer = it },
+                    onButtonClick = {
+                        if (counter == amountOfPlayers.toInt()) {
+                            counter++
+                        }
+                        if (nameOfPlayer.isNotBlank() && counter < amountOfPlayers.toInt()) {
+                            counter++
+                            val player = Player(nameOfPlayer, counter)
+                            playerList.add(player)
+                            nameOfPlayer = ""
+                        }
+                        if (counter == amountOfPlayers.toInt() + 1) {
+                            gameState = "Game"
+                        }
                     }
-                    if (nameOfPlayer.isNotBlank() && counter < amountOfPlayers.toInt()) {
-                        counter++
-                        val player = Player(nameOfPlayer, counter)
-                        playerList.add(player)
-                        nameOfPlayer = ""
+                )
+                // test if works won't be included in final version of game or i will just do it normal
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    playerList.forEach { player ->
+                        Text(text = "Player${player.id} : ${player.name}")
                     }
-                    if (counter == amountOfPlayers.toInt() + 1) {
-                        gameState = "Game"
-                    }
-                }
-            )
-            Column(
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxSize()
-            ) {
-                playerList.forEach { player ->
-                    Text(text = "Player${player.id} : ${player.name}")
                 }
             }
-        }
         "Game" -> {
-
-            val currentPlayer = playerList.getOrNull(currentPlayerIndex.value)
+            var currentPlayerIndex by remember { mutableStateOf(0) }
+            var currentPlayer by remember{ mutableStateOf(playerList[currentPlayerIndex]) }
 
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
                 modifier = Modifier.fillMaxSize()
             ) {
-                if (currentPlayer != null) {
-                    Text(text = currentPlayer.name + " now plays!")
-                    Text(text = "Your cards are: ")
+                Text(text = currentPlayer.name + " now plays!")
+                Text(text = "Your cards are: ")
 
-                    currentPlayer.cardCollection.forEach { card ->
-                        Text(text = card.toString())
-                    }
-                    Text(text = "Suma is: " + currentPlayer.sumaValueCards)
-                    if (currentPlayer.sumaValueCards <= 21) {
-                        Row {
-                            Button(onClick = {
-                                currentPlayer.takeCard(cardsList)
-                            }) {
-                                Text(text = "Hit")
+                currentPlayer.cardCollection.forEach { card ->
+                    Text(text = card.toString())
+                }
+                Text(text = "Suma is: " + currentPlayer.sumaValueCards)
+                if (currentPlayer.sumaValueCards <= 21) {
+                    Row {
+                        Button(onClick = {
+                            currentPlayer.takeCard(cardsList)
+                        }) {
+                            Text(text = "Hit")
+                        }
+                        Button(onClick = {
+                            try {
+                                currentPlayerIndex++
+                                currentPlayer = playerList[currentPlayerIndex]
+                            } catch (e: IndexOutOfBoundsException) {
+                                // catch block not done
                             }
-                            Button(onClick = {
-                                currentPlayerIndex.value++
-                            }) {
-                                Text(text = "Next Player")
-                            }
-                            Button(onClick = { /* TODO */ }) {
-                                // ...
-                            }
+
+                        }) {
+                            Text(text = "Stand")
                         }
                     }
                 }
@@ -269,10 +267,6 @@ fun Game() {
         }
     }
 }
-
-
-
-
 
 
 @Composable
@@ -313,6 +307,6 @@ fun TextFieldWithButton(
 
 @Preview(showBackground = true)
 @Composable
-fun BlackJackAppPreview(modifier: Modifier = Modifier.fillMaxSize()) {
+fun BlackJackAppPreview() {
     BlackJackApp()
 }
