@@ -179,6 +179,9 @@ fun Game() {
     var amountOfPlayers by remember { mutableStateOf("") }
     var nameOfPlayer by remember { mutableStateOf("") }
     var counter by remember { mutableStateOf(0) }
+    val currentPlayerIndex = remember { mutableStateOf(0) }
+    val cardsList = Card.generateCardList()
+
 
     when (gameState) {
         "Input amount" ->
@@ -228,53 +231,41 @@ fun Game() {
             }
         }
         "Game" -> {
-            val loosePlayersList = remember { mutableStateListOf<Player>() }
-            val firedPlayersList = remember { mutableStateListOf<Player>() }
-            val winnerPlayersList = remember { mutableStateListOf<Player>() }
-            val cardsList = Card.generateCardList()
-            var playerCount by remember { mutableStateOf(0) }
-            var player by remember(playerCount) { mutableStateOf(playerList[playerCount]) }
+
+            val currentPlayer = playerList.getOrNull(currentPlayerIndex.value)
 
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.fillMaxSize()
             ) {
-                Text(text = player.name + " now plays!")
-                Text(text = "Your cards are: ")
+                if (currentPlayer != null) {
+                    Text(text = currentPlayer.name + " now plays!")
+                    Text(text = "Your cards are: ")
 
-                player.cardCollection.forEach() { card ->
-                    Text(text = card.toString())
-                }
-                Text(text = "Suma is: " + player.sumaValueCards)
-                if (player.sumaValueCards <= 21) {
-                    Row {
-                        Button(onClick = {
-                            player.takeCard(cardsList)
-                        }) {
-                            Text(text = "Hit")
-                        }
-                        Button(onClick = {
-                            playerCount++
-                            player = playerList[playerCount]
-                        }
-                        ) {
-//                            Text(text = )
-                        }
-                        Button(onClick = { /*TODO*/ }) {
-
+                    currentPlayer.cardCollection.forEach { card ->
+                        Text(text = card.toString())
+                    }
+                    Text(text = "Suma is: " + currentPlayer.sumaValueCards)
+                    if (currentPlayer.sumaValueCards <= 21) {
+                        Row {
+                            Button(onClick = {
+                                currentPlayer.takeCard(cardsList)
+                            }) {
+                                Text(text = "Hit")
+                            }
+                            Button(onClick = {
+                                currentPlayerIndex.value++
+                            }) {
+                                Text(text = "Next Player")
+                            }
+                            Button(onClick = { /* TODO */ }) {
+                                // ...
+                            }
                         }
                     }
-
                 }
-
             }
-
-
-
-
-
-
         }
     }
 }
