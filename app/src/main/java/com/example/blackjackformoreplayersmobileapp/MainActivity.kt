@@ -74,10 +74,6 @@ fun BlackJackApp() {
     fun setPage(string: String) {
         page = string
     }
-    val loosePlayers : MutableList<Player> = mutableListOf()
-    val firedPlayers : MutableList<Player> = mutableListOf()
-    val winnerPlayer : MutableList<Player> = mutableListOf()
-    val cardsList : MutableList<Card> = Card.generateCardList()
     Box {
         Image(painter = painterResource(id = R.drawable.black_jack_menu2), contentDescription = null, contentScale = ContentScale.Crop, modifier = Modifier.fillMaxHeight())
         when(page) {
@@ -166,7 +162,7 @@ fun Rules(
             onClick = { returnToMainMenu() },
             modifier = Modifier.padding(start = 20.dp, top = 50.dp),
             ) {
-                Text(text = "Return to main menu",)
+                Text(text = "Return to main menu")
         }
 
     }
@@ -177,39 +173,28 @@ fun Rules(
 
 @Composable
 fun Game() {
-    var gameState by remember { mutableStateOf("Players input") }
+    var gameState by remember { mutableStateOf("Input amount") }
+    val playerList = remember { mutableStateListOf<Player>() }
+    var amountOfPlayers by remember { mutableStateOf("") }
+    var nameOfPlayer by remember { mutableStateOf("") }
+    var counter by remember { mutableStateOf(0) }
 
-    PlayersInput()
-}
-
-@Composable
-fun PlayersInput() {
-    val playerList: MutableList<Player> by remember { mutableStateOf(mutableListOf()) }
-    var amountOfPlayers by remember { mutableStateOf("0") }
-    var inputPage by remember {
-        mutableStateOf("Input amount")
-    }
-    var nameOfPlayer by remember {
-        mutableStateOf("")
-    }
-    var counter = 0
-
-
-    when (inputPage) {
+    when (gameState) {
         "Input amount" ->
             TextFieldWithButton(
-            textFieldLabel = R.string.input_amount_of_players,
-            keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Number,
-                imeAction = ImeAction.Done
-            ),
-            value = amountOfPlayers,
-            onValueChange = {amountOfPlayers = it},
-            onButtonClick = { if(amountOfPlayers.toInt() in 2..7) inputPage = "Input name"  }
-        )
+                textFieldLabel = R.string.input_amount_of_players,
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Done
+                ),
+                value = amountOfPlayers,
+                onValueChange = {amountOfPlayers = it},
+                onButtonClick = { if(amountOfPlayers.toInt() in 2..7) gameState = "Input name"  }
+            )
         "Input name" -> {
             TextFieldWithButton(
                 textFieldLabel = R.string.input_name_of_player,
+                textButton = if(counter < amountOfPlayers.toInt()) R.string.enter else R.string.start ,
                 keyboardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Text,
                     imeAction = ImeAction.Done
@@ -217,20 +202,41 @@ fun PlayersInput() {
                 value = nameOfPlayer,
                 onValueChange = { nameOfPlayer = it },
                 onButtonClick = {
-                    if (nameOfPlayer.isNotBlank() && counter != amountOfPlayers.toInt()) {
+                    if (counter == amountOfPlayers.toInt()) {
+                        counter++
+                    }
+                    if (nameOfPlayer.isNotBlank() && counter < amountOfPlayers.toInt()) {
                         counter++
                         val player = Player(nameOfPlayer, counter)
                         playerList.add(player)
                         nameOfPlayer = ""
                     }
+                    if (counter == amountOfPlayers.toInt() + 1) {
+                        gameState = "Game"
+                    }
                 }
             )
-            playerList.forEach { player ->
-                Text(text = player.name)
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                playerList.forEach { player ->
+                    Text(text = "Player${player.id} : ${player.name}")
+                }
             }
+        }
+        "Game" -> {
+
         }
     }
 }
+
+
+
+
+
+
 @Composable
 fun Result() {
 
@@ -239,6 +245,7 @@ fun Result() {
 @Composable
 fun TextFieldWithButton(
     @StringRes textFieldLabel: Int,
+    @StringRes textButton: Int = R.string.enter,
     keyboardOptions: KeyboardOptions,
     value: String?,
     onValueChange: (String) -> Unit,
@@ -261,14 +268,10 @@ fun TextFieldWithButton(
             )
         Spacer(modifier = Modifier.height(16.dp))
         Button(onClick = onButtonClick) {
-            Text(text = stringResource(R.string.enter))
+            Text(text = stringResource(textButton))
         }
     }
 }
-
-
-
-
 
 @Preview(showBackground = true)
 @Composable
