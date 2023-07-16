@@ -141,7 +141,7 @@ fun Rules(
         modifier = Modifier.fillMaxSize()
         ) {
         Text(
-            text = "The rules",
+            text = stringResource(R.string.the_rules),
             style = MaterialTheme.typography.headlineLarge,
             fontSize = 50.sp,
             modifier = Modifier.padding(end = 32.dp, start = 19.dp)
