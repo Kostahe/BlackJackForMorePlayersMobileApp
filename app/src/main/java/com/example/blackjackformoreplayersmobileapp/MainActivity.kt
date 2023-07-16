@@ -1,7 +1,3 @@
-@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class,
-)
-
-
 package com.example.blackjackformoreplayersmobileapp
 
 import android.os.Bundle
@@ -280,6 +276,7 @@ fun Result() {
     // not done
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TextFieldWithButton(
     @StringRes textFieldLabel: Int,
