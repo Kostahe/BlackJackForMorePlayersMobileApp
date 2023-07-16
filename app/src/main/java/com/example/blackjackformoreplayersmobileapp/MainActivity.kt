@@ -209,7 +209,7 @@ fun Game() {
                         }
                     }
                 )
-                // test if works won't be included in final version of game or I will just do it normal
+                // test if works it won't be included in final version of game or I will just do it normal
                 Column(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally,
