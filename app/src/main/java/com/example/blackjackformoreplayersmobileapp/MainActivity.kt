@@ -133,7 +133,6 @@ fun MainMenu(
 fun Rules(
     returnToMainMenu: () -> Unit,
 ) {
-
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -156,10 +155,7 @@ fun Rules(
             ) {
                 Text(text = "Return to main menu")
         }
-
     }
-
-
 }
 
 
@@ -171,9 +167,6 @@ fun Game() {
     val cardsList = Card.generateCardList()
     var nameOfPlayer by remember { mutableStateOf("") }
     var counter by remember { mutableStateOf(0) }
-
-
-
 
         when (gameState) {
 
@@ -216,7 +209,7 @@ fun Game() {
                         }
                     }
                 )
-                // test if works won't be included in final version of game or i will just do it normal
+                // test if works won't be included in final version of game or I will just do it normal
                 Column(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -271,7 +264,7 @@ fun Game() {
 
 @Composable
 fun Result() {
-
+    // not done
 }
 
 @Composable
