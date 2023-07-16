@@ -1,4 +1,4 @@
-package com.example.blackjackformoreplayersmobileapp;
+package com.example.blackjackformoreplayersmobileapp.classes;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -43,6 +43,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.blackjackformoreplayersmobileapp.classes.Card
+import com.example.blackjackformoreplayersmobileapp.classes.Player
 import com.example.blackjackformoreplayersmobileapp.ui.theme.BlackJackForMorePlayersMobileAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -200,7 +202,11 @@ fun Game(
                         }
                         if (nameOfPlayer.isNotBlank() && counter < amountOfPlayers.toInt()) {
                             counter++
-                            val player = Player(nameOfPlayer, counter)
+                            val player =
+                                Player(
+                                    nameOfPlayer,
+                                    counter
+                                )
                             playerList.add(player)
                             nameOfPlayer = ""
                         }
