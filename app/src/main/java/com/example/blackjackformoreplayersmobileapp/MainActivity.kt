@@ -1,4 +1,6 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class,
+    ExperimentalMaterial3Api::class
+)
 
 package com.example.blackjackformoreplayersmobileapp
 
@@ -145,7 +147,7 @@ fun Rules(
             modifier = Modifier.padding(end = 32.dp, start = 19.dp)
             )
         Text(
-            text = "1. Black jack players are scored by their total cards value. The player with the highest total cards value wins as long as it doesn't exceed 21. The players with a highest totals than 21 are said to bust.\n\n2. Amount of players that can play is between 2-7.\n\n3. Ace is 11.",
+            text = stringResource(R.string.rules),
             modifier = Modifier.padding(top = 30.dp, start = 30.dp, end = 25.dp),
             textAlign = TextAlign.Justify,
         )
@@ -153,7 +155,7 @@ fun Rules(
             onClick = { returnToMainMenu() },
             modifier = Modifier.padding(start = 20.dp, top = 50.dp),
             ) {
-                Text(text = "Return to main menu")
+                Text(text = stringResource(R.string.return_to_main_menu))
         }
     }
 }
@@ -230,7 +232,7 @@ fun Game() {
                 modifier = Modifier.fillMaxSize()
             ) {
                 Text(text = currentPlayer.name + " now plays!")
-                Text(text = "Your cards are: ")
+                Text(text = stringResource(R.string.your_cards_are))
 
                 currentPlayer.cardCollection.forEach { card ->
                     Text(text = card.toString())
@@ -241,7 +243,7 @@ fun Game() {
                         Button(onClick = {
                             currentPlayer.takeCard(cardsList)
                         }) {
-                            Text(text = "Hit")
+                            Text(text = stringResource(R.string.hit))
                         }
                         Button(onClick = {
                             try {
@@ -252,7 +254,7 @@ fun Game() {
                             }
 
                         }) {
-                            Text(text = "Stand")
+                            Text(text = stringResource(R.string.stand))
                         }
                     }
                 }
