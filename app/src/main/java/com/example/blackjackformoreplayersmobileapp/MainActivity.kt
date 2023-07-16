@@ -1,4 +1,5 @@
 @file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class,
+    ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class,
     ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class
 )
 
@@ -22,7 +23,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+//import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -36,7 +37,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+//import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -73,7 +74,7 @@ fun BlackJackApp() {
         Image(painter = painterResource(id = R.drawable.black_jack_menu2), contentDescription = null, contentScale = ContentScale.Crop, modifier = Modifier.fillMaxHeight())
         when(page) {
             "MainMenu" -> MainMenu({page = "Game"}, {page = "Rules"}, {})
-            "Rules" -> Rules { page = "MainMenu" }
+            "Rules" -> Rules({ page = "MainMenu" })
             "Game" -> Game()
             "Result" -> Result()
         }
@@ -101,7 +102,7 @@ fun MainMenu(
             modifier = Modifier
                 .width(250.dp)
                 .padding(top = 40.dp),
-            colors = ButtonDefaults.buttonColors(Color(203, 45, 115))
+//            colors = ButtonDefaults.buttonColors(Color(203, 45, 115))
         ) {
             Text(
                 text = stringResource(R.string.start),
@@ -111,7 +112,7 @@ fun MainMenu(
         Button(
             onClick = { onReadRulesClick() },
             modifier = Modifier.width(250.dp),
-            colors = ButtonDefaults.buttonColors(Color(53, 61, 108))
+//            colors = ButtonDefaults.buttonColors(Color(53, 61, 108))
         ) {
             Text(
                 text = stringResource(R.string.read_the_rules),
@@ -121,7 +122,7 @@ fun MainMenu(
         Button(
             onClick = { onEndClick() },
             modifier = Modifier.width(250.dp),
-            colors = ButtonDefaults.buttonColors(Color(53, 61, 108))
+//            colors = ButtonDefaults.buttonColors(Color(53, 61, 108))
         ) {
             Text(
                 text = stringResource(R.string.end),
@@ -134,11 +135,12 @@ fun MainMenu(
 @Composable
 fun Rules(
     returnToMainMenu: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize()
         ) {
         Text(
             text = stringResource(R.string.the_rules),
@@ -162,7 +164,8 @@ fun Rules(
 
 
 @Composable
-fun Game() {
+fun Game(
+) {
     var gameState by remember { mutableStateOf("Input amount") }
     var amountOfPlayers by remember { mutableStateOf("") }
     val playerList = remember { mutableStateListOf<Player>() }
@@ -223,6 +226,7 @@ fun Game() {
                 }
             }
         "Game" -> {
+
             var currentPlayerIndex by remember { mutableStateOf(0) }
             var currentPlayer by remember{ mutableStateOf(playerList[currentPlayerIndex]) }
 
@@ -239,10 +243,15 @@ fun Game() {
                 }
                 Text(text = "Suma is: " + currentPlayer.sumaValueCards)
                 if (currentPlayer.sumaValueCards <= 21) {
-                    Row {
-                        Button(onClick = {
+                    Row(modifier = Modifier.width(200.dp)) {
+                        Button(
+                            onClick = {
                             currentPlayer.takeCard(cardsList)
-                        }) {
+                        },
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(end = 5.dp)
+                        ) {
                             Text(text = stringResource(R.string.hit))
                         }
                         Button(onClick = {
@@ -252,8 +261,11 @@ fun Game() {
                             } catch (e: IndexOutOfBoundsException) {
                                 // catch block not done
                             }
-
-                        }) {
+                        },
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(start = 5.dp)
+                        ) {
                             Text(text = stringResource(R.string.stand))
                         }
                     }
@@ -277,8 +289,6 @@ fun TextFieldWithButton(
     value: String?,
     onValueChange: (String) -> Unit,
     onButtonClick: () -> Unit,
-
-
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
