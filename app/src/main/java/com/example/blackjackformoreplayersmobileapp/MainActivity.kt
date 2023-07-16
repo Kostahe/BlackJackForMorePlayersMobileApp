@@ -161,8 +161,7 @@ fun Rules(
 
 
 @Composable
-fun Game(
-) {
+fun Game() {
     var gameState by remember { mutableStateOf("Input amount") }
     var amountOfPlayers by remember { mutableStateOf("") }
     val playerList = remember { mutableStateListOf<Player>() }
