@@ -16,8 +16,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 //import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -43,9 +47,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.blackjackformoreplayersmobileapp.classes.Card
 import com.example.blackjackformoreplayersmobileapp.classes.Player
+import com.example.blackjackformoreplayersmobileapp.classes.Card as CardClass
 import com.example.blackjackformoreplayersmobileapp.ui.theme.BlackJackForMorePlayersMobileAppTheme
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -159,13 +164,12 @@ fun Rules(
     }
 }
 
-
 @Composable
 fun Game() {
     var gameState by remember { mutableStateOf("Input amount") }
     var amountOfPlayers by remember { mutableStateOf("") }
     val playerList = remember { mutableStateListOf<Player>() }
-    val cardsList = Card.generateCardList()
+    val cardsList = CardClass.generateCardList()
     var nameOfPlayer by remember { mutableStateOf("") }
     var counter by remember { mutableStateOf(0) }
 
@@ -215,15 +219,7 @@ fun Game() {
                     }
                 )
                 // test if works it won't be included in final version of game or I will just do it normal
-                Column(
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    playerList.forEach { player ->
-                        Text(text = "Player${player.id} : ${player.name}")
-                    }
-                }
+                PlayersInfo(playerList)
             }
         "Game" -> {
 
@@ -238,8 +234,10 @@ fun Game() {
                 Text(text = currentPlayer.name + " now plays!")
                 Text(text = stringResource(R.string.your_cards_are))
 
-                currentPlayer.cardCollection.forEach { card ->
-                    Text(text = card.toString())
+                LazyColumn {
+                    items(currentPlayer.cardCollection) { card ->
+                        Text(text = card.toString())
+                    }
                 }
                 Text(text = "Suma is: " + currentPlayer.sumaValueCards)
                 if (currentPlayer.sumaValueCards <= 21) {
@@ -307,6 +305,39 @@ fun TextFieldWithButton(
         Spacer(modifier = Modifier.height(16.dp))
         Button(onClick = onButtonClick) {
             Text(text = stringResource(textButton))
+        }
+    }
+}
+@Composable
+fun PlayersInfo(
+    playersList: List<Player>,
+    modifier: Modifier = Modifier
+) {
+    LazyRow(
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = modifier
+    ) {
+        items(playersList) { player ->
+            PlayerInfo(player)
+        }
+    }
+}
+
+@Composable
+fun PlayerInfo(
+    player: Player,
+    modifier: Modifier = Modifier
+) {
+    Card(modifier = modifier) {
+        Column {
+            Text(text = "Player${player.id} : ${player.name}")
+            Image(
+                painter = painterResource(id = R.drawable.anonymous_user),
+                contentDescription = null,
+                modifier = Modifier
+                    .width(62.dp)
+                    .height(62.dp),
+            )
         }
     }
 }
