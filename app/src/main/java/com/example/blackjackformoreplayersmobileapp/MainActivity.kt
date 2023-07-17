@@ -225,7 +225,9 @@ fun Game() {
 
             var currentPlayerIndex by remember { mutableStateOf(0) }
             var currentPlayer by remember{ mutableStateOf(playerList[currentPlayerIndex]) }
-
+            val currentPlayerCardCollection = remember { mutableStateListOf(currentPlayer.cardCollection) }
+            var currentPlayerSumaCards by remember { mutableStateOf(currentPlayer.sumaValueCards)
+            }
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
@@ -235,16 +237,17 @@ fun Game() {
                 Text(text = stringResource(R.string.your_cards_are))
 
                 LazyColumn {
-                    items(currentPlayer.cardCollection) { card ->
+                    items(currentPlayerCardCollection) { card ->
                         Text(text = card.toString())
                     }
                 }
                 Text(text = "Suma is: " + currentPlayer.sumaValueCards)
-                if (currentPlayer.sumaValueCards <= 21) {
+                if (currentPlayerSumaCards <= 21) {
                     Row(modifier = Modifier.width(200.dp)) {
                         Button(
                             onClick = {
                             currentPlayer.takeCard(cardsList)
+                            currentPlayerSumaCards = currentPlayer.sumaValueCards
                         },
                         modifier = Modifier
                             .weight(1f)
@@ -256,6 +259,7 @@ fun Game() {
                             try {
                                 currentPlayerIndex++
                                 currentPlayer = playerList[currentPlayerIndex]
+
                             } catch (e: IndexOutOfBoundsException) {
                                 // catch block not done
                             }
