@@ -33,6 +33,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -77,7 +78,7 @@ fun BlackJackApp() {
         when(page) {
             "MainMenu" -> MainMenu({page = "Game"}, {page = "Rules"}, {})
             "Rules" -> Rules({ page = "MainMenu" })
-            "Game" -> Game()
+            "Game" -> Game { page = "Result" }
             "Result" -> Result()
         }
     }
@@ -165,7 +166,7 @@ fun Rules(
 }
 
 @Composable
-fun Game() {
+fun Game(onResult: () -> Unit) {
     var gameState by remember { mutableStateOf("Input amount") }
     var amountOfPlayers by remember { mutableStateOf("") }
     val playerList = remember { mutableStateListOf<Player>() }
@@ -222,12 +223,12 @@ fun Game() {
                 PlayersInfo(playerList)
             }
         "Game" -> {
-
             var currentPlayerIndex by remember { mutableStateOf(0) }
             var currentPlayer by remember{ mutableStateOf(playerList[currentPlayerIndex]) }
-            val currentPlayerCardCollection = remember { mutableStateListOf(currentPlayer.cardCollection) }
+            var currentPlayerCardCollection = remember { mutableStateListOf(currentPlayer.cardCollection) }
             var currentPlayerSumaCards by remember { mutableStateOf(currentPlayer.sumaValueCards)
             }
+
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
@@ -247,6 +248,7 @@ fun Game() {
                         Button(
                             onClick = {
                             currentPlayer.takeCard(cardsList)
+                            currentPlayerCardCollection = mutableStateListOf(currentPlayer.cardCollection)
                             currentPlayerSumaCards = currentPlayer.sumaValueCards
                         },
                         modifier = Modifier
@@ -256,12 +258,13 @@ fun Game() {
                             Text(text = stringResource(R.string.hit))
                         }
                         Button(onClick = {
+                            currentPlayerCardCollection = mutableStateListOf(currentPlayer.cardCollection)
                             try {
                                 currentPlayerIndex++
                                 currentPlayer = playerList[currentPlayerIndex]
 
                             } catch (e: IndexOutOfBoundsException) {
-                                // catch block not done
+                                onResult()
                             }
                         },
                         modifier = Modifier
@@ -270,6 +273,18 @@ fun Game() {
                         ) {
                             Text(text = stringResource(R.string.stand))
                         }
+                    }
+                }
+                else {
+                    Text(text = currentPlayer.name + " you busted")
+                    try {
+                        currentPlayerIndex++
+                        currentPlayer = playerList[currentPlayerIndex]
+                        currentPlayerSumaCards = 0
+
+
+                    } catch (e: IndexOutOfBoundsException) {
+                        onResult()
                     }
                 }
             }
