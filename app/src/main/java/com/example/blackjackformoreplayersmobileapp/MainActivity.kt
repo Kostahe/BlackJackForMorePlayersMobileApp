@@ -22,7 +22,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
-//import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -36,7 +35,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-//import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -224,10 +222,8 @@ fun Game(onResult: () -> Unit) {
         "Game" -> {
             var currentPlayerIndex by remember { mutableStateOf(0) }
             var currentPlayer by remember{ mutableStateOf(playerList[currentPlayerIndex]) }
-            var currentPlayerCardCollection = remember { mutableStateListOf(currentPlayer.cardCollection) }
-            var currentPlayerSumaCards by remember { mutableStateOf(currentPlayer.sumaValueCards)
-            }
-
+            val currentPlayerCardCollection = remember { mutableStateListOf<CardClass>() }
+            var currentPlayerSumaCards by remember { mutableStateOf(currentPlayer.sumaValueCards) }
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
@@ -247,7 +243,7 @@ fun Game(onResult: () -> Unit) {
                         Button(
                             onClick = {
                             currentPlayer.takeCard(cardsList)
-                            currentPlayerCardCollection = mutableStateListOf(currentPlayer.cardCollection)
+                            currentPlayerCardCollection.add(currentPlayer.cardCollection.last())
                             currentPlayerSumaCards = currentPlayer.sumaValueCards
                         },
                         modifier = Modifier
@@ -258,13 +254,12 @@ fun Game(onResult: () -> Unit) {
                         }
                         Button(onClick = {
                             currentPlayer.cardCollection.clear()
-                            currentPlayerCardCollection = mutableStateListOf(currentPlayer.cardCollection)
-                            if(currentPlayerIndex != playerList.size) {
+
+                            if(currentPlayerIndex + 1 < playerList.size) {
                                 currentPlayerIndex++
                                 currentPlayer = playerList[currentPlayerIndex]
                                 currentPlayerSumaCards = 0
-
-
+                                currentPlayerCardCollection.clear()
                             } else  {
                                 onResult()
                             }
@@ -278,13 +273,11 @@ fun Game(onResult: () -> Unit) {
                     }
                 }
                 else {
-                    Text(text = currentPlayer.name + " you busted")
-                    if(currentPlayerIndex != playerList.size) {
+                    if(currentPlayerIndex + 1 < playerList.size) {
                         currentPlayerIndex++
                         currentPlayer = playerList[currentPlayerIndex]
                         currentPlayerSumaCards = 0
-
-
+                        currentPlayerCardCollection.clear()
                     } else  {
                         onResult()
                     }
@@ -294,10 +287,9 @@ fun Game(onResult: () -> Unit) {
     }
 }
 
-
 @Composable
 fun Result() {
-    // not done
+
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
