@@ -182,7 +182,7 @@ fun Game() {
                 ),
                 value = amountOfPlayers,
                 onValueChange = {amountOfPlayers = it},
-                onButtonClick = { if(amountOfPlayers.toInt() in 2..7) gameState = "Input name"  }
+                onButtonClick = { if(amountOfPlayers.toIntOrNull() in 2..7) gameState = "Input name"  }
             )
         }
             "Input name" -> {
@@ -288,7 +288,6 @@ fun Game() {
             val firedPlayers = mutableListOf<Player>()
             val winnerPlayers = mutableListOf<Player>()
 
-
             playerList.forEach { player ->
                 if(player.sumaValueCards > 21)
                     firedPlayers.add(player)
@@ -296,7 +295,7 @@ fun Game() {
                     winnerPlayers.add(player)
             }
             val maxPointsOfPlayer: Int = winnerPlayers.max().sumaValueCards
-            playerList.forEach { player ->
+            winnerPlayers.forEach { player ->
                 if (player.sumaValueCards != maxPointsOfPlayer)
                     loosePlayers.add(player)
             }
@@ -383,8 +382,7 @@ fun PlayerInfo(
                     .width(62.dp)
                     .height(62.dp),
             )
-            Text(text = "Player${player.id} : ${player.name}")
-
+            Text(text = "Player${player.id}: ${player.name}")
         }
     }
 }
