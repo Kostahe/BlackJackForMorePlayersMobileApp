@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -22,6 +23,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -35,6 +37,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -44,10 +48,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.blackjackformoreplayersmobileapp.classes.Player
-import com.example.blackjackformoreplayersmobileapp.classes.Card as CardClass
 import com.example.blackjackformoreplayersmobileapp.ui.theme.BlackJackForMorePlayersMobileAppTheme
+import com.example.blackjackformoreplayersmobileapp.classes.Card as CardClass
 
 
 class MainActivity : ComponentActivity() {
@@ -58,7 +61,6 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background,
-
                 ) {
                     BlackJackApp()
                 }
@@ -91,17 +93,25 @@ fun MainMenu(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxSize()
     ) {
-        Text(
-            text = stringResource(R.string.blackjack_title),
-            style = MaterialTheme.typography.headlineLarge,
-            fontSize = 70.sp,
-        )
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Image(
+                painter = painterResource(id = R.drawable.playing_cards_48px),
+                contentDescription = null,
+                modifier = Modifier
+                    .padding(4.dp)
+                    .size(50.dp)
+            )
+            Text(
+                text = stringResource(R.string.blackjack_title),
+                style = MaterialTheme.typography.displayLarge,
+            )
+        }
+
         Button(
             onClick = { onStartButtonClick() },
             modifier = Modifier
                 .width(250.dp)
                 .padding(top = 40.dp),
-//            colors = ButtonDefaults.buttonColors(Color(203, 45, 115))
         ) {
             Text(
                 text = stringResource(R.string.start),
@@ -111,7 +121,6 @@ fun MainMenu(
         Button(
             onClick = { onReadRulesClick() },
             modifier = Modifier.width(250.dp),
-//            colors = ButtonDefaults.buttonColors(Color(53, 61, 108))
         ) {
             Text(
                 text = stringResource(R.string.read_the_rules),
@@ -121,7 +130,6 @@ fun MainMenu(
         Button(
             onClick = { onEndClick() },
             modifier = Modifier.width(250.dp),
-//            colors = ButtonDefaults.buttonColors(Color(53, 61, 108))
         ) {
             Text(
                 text = stringResource(R.string.end),
@@ -141,12 +149,20 @@ fun Rules(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier.fillMaxSize()
         ) {
-        Text(
-            text = stringResource(R.string.the_rules),
-            style = MaterialTheme.typography.headlineLarge,
-            fontSize = 50.sp,
-            modifier = Modifier.padding(end = 32.dp, start = 19.dp)
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Image(
+                painter = painterResource(id = R.drawable.developer_guide_48px),
+                contentDescription = null,
+                modifier = Modifier
+                    .padding(4.dp)
+                    .size(50.dp)
             )
+            Text(
+                text = stringResource(R.string.the_rules),
+                style = MaterialTheme.typography.displayLarge,
+
+                )
+        }
         Text(
             text = stringResource(R.string.rules),
             modifier = Modifier.padding(top = 30.dp, start = 30.dp, end = 25.dp),
@@ -186,10 +202,9 @@ fun Game() {
             )
         }
             "Input name" -> {
-
                 TextFieldWithButton(
                     textFieldLabel = R.string.input_name_of_player,
-                    textButton = if(counter < amountOfPlayers.toInt()) R.string.enter else R.string.start ,
+                    textButton = if (counter < amountOfPlayers.toInt()) R.string.enter else R.string.start,
                     keyboardOptions = KeyboardOptions.Default.copy(
                         keyboardType = KeyboardType.Text,
                         imeAction = ImeAction.Done
@@ -215,8 +230,12 @@ fun Game() {
                         }
                     }
                 )
-                // test if works it won't be included in final version of game or I will just do it normal
-                PlayersInfo(playerList)
+                LazyRow {
+                    items(playerList) {
+                        PlayerInfo(player = it)
+                    }
+                }
+
             }
         "Game" -> {
             var currentPlayerIndex by remember { mutableStateOf(0) }
@@ -252,7 +271,6 @@ fun Game() {
                             Text(text = stringResource(R.string.hit))
                         }
                         Button(onClick = {
-                            currentPlayer.cardCollection.clear()
 
                             if(currentPlayerIndex + 1 < playerList.size) {
                                 currentPlayerIndex++
@@ -302,19 +320,19 @@ fun Game() {
             loosePlayers.sortDescending()
             loosePlayers.addAll(firedPlayers)
             winnerPlayers.removeAll(loosePlayers)
-            
-            Column() {
-                LazyColumn() { 
-                    items(winnerPlayers) { 
-                        Row() {
-                            PlayerInfo(player = it)
+
+            Column {
+                LazyColumn {
+                    items(winnerPlayers) {
+                        Row {
+                            PlayerInfoScore(player = it, color = Color(254, 192, 9))
                         }
                     }
                 }
-                LazyColumn() {
+                LazyColumn {
                     items(loosePlayers) {
-                        Row() {
-                            PlayerInfo(player = it)
+                        Row {
+                            PlayerInfoScore(player = it)
                         }
                     }
                 }
@@ -322,7 +340,6 @@ fun Game() {
         }
     }
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -355,20 +372,6 @@ fun TextFieldWithButton(
         }
     }
 }
-@Composable
-fun PlayersInfo(
-    playersList: List<Player>,
-    modifier: Modifier = Modifier
-) {
-    LazyRow(
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = modifier
-    ) {
-        items(playersList) { player ->
-            PlayerInfo(player)
-        }
-    }
-}
 
 @Composable
 fun PlayerInfo(
@@ -381,10 +384,53 @@ fun PlayerInfo(
                 painter = painterResource(id = R.drawable.anonymous_user),
                 contentDescription = null,
                 modifier = Modifier
-                    .width(62.dp)
-                    .height(62.dp),
+                    .size(68.dp)
+                    .padding(4.dp)
+                    .clip(MaterialTheme.shapes.small),
             )
-            Text(text = "Player${player.id}: ${player.name}")
+            Text(
+                text = "Player${player.id}: ${player.name}",
+                style = MaterialTheme.typography.displayMedium,
+                modifier = Modifier.padding(top = 4.dp)
+            )
+        }
+    }
+}
+
+@Composable
+fun PlayerInfoScore(
+    player: Player,
+    modifier: Modifier = Modifier,
+    color: Color = MaterialTheme.colorScheme.surfaceVariant
+) {
+    Card(
+        modifier = modifier,
+        colors = CardDefaults.cardColors(
+            containerColor = color,
+        )
+    ) {
+        Row {
+            Image(
+                painter = painterResource(id = R.drawable.anonymous_user),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(32.dp)
+                    .padding(4.dp)
+                    .clip(MaterialTheme.shapes.small),
+
+                )
+            Text(
+                text = "Player${player.id}: ${player.name}",
+                style = MaterialTheme.typography.displayMedium,
+                modifier = Modifier.padding(top = 4.dp)
+            )
+
+            Spacer(modifier = Modifier.weight(1f))
+            Text(
+                text = player.sumaValueCards.toString(),
+                style = MaterialTheme.typography.displayMedium,
+                modifier = Modifier.padding(top = 4.dp, end = 8.dp)
+            )
         }
     }
 }
@@ -392,8 +438,7 @@ fun PlayerInfo(
 @Preview(showBackground = true)
 @Composable
 fun BlackJackAppPreview() {
-    BlackJackForMorePlayersMobileAppTheme() {
+    BlackJackForMorePlayersMobileAppTheme {
         BlackJackApp()
     }
-
 }
