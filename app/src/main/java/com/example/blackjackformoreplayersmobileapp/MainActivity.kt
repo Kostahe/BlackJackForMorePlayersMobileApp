@@ -259,11 +259,13 @@ fun Game(onResult: () -> Unit) {
                         Button(onClick = {
                             currentPlayer.cardCollection.clear()
                             currentPlayerCardCollection = mutableStateListOf(currentPlayer.cardCollection)
-                            try {
+                            if(currentPlayerIndex != playerList.size) {
                                 currentPlayerIndex++
                                 currentPlayer = playerList[currentPlayerIndex]
+                                currentPlayerSumaCards = 0
 
-                            } catch (e: IndexOutOfBoundsException) {
+
+                            } else  {
                                 onResult()
                             }
                         },
@@ -277,13 +279,13 @@ fun Game(onResult: () -> Unit) {
                 }
                 else {
                     Text(text = currentPlayer.name + " you busted")
-                    try {
+                    if(currentPlayerIndex != playerList.size) {
                         currentPlayerIndex++
                         currentPlayer = playerList[currentPlayerIndex]
                         currentPlayerSumaCards = 0
 
 
-                    } catch (e: IndexOutOfBoundsException) {
+                    } else  {
                         onResult()
                     }
                 }
