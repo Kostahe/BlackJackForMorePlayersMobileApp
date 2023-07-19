@@ -42,7 +42,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -50,6 +49,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.blackjackformoreplayersmobileapp.classes.Player
 import com.example.blackjackformoreplayersmobileapp.ui.theme.BlackJackForMorePlayersMobileAppTheme
+import kotlin.system.exitProcess
 import com.example.blackjackformoreplayersmobileapp.classes.Card as CardClass
 
 
@@ -75,9 +75,9 @@ fun BlackJackApp() {
     Box {
         Image(painter = painterResource(id = R.drawable.black_jack_menu2), contentDescription = null, contentScale = ContentScale.Crop, modifier = Modifier.fillMaxHeight())
         when(page) {
-            "MainMenu" -> MainMenu({page = "Game"}, {page = "Rules"}, {})
+            "MainMenu" -> MainMenu({ page = "Game" }, { page = "Rules" })
             "Rules" -> Rules({ page = "MainMenu" })
-            "Game" -> Game()
+            "Game" -> Game { page = "MainMenu" }
         }
     }
 }
@@ -86,7 +86,6 @@ fun BlackJackApp() {
 fun MainMenu(
     onStartButtonClick: () -> Unit,
     onReadRulesClick: () -> Unit,
-    onEndClick: () -> Unit,
 ) {
     Column(
         verticalArrangement = Arrangement.Center,
@@ -115,7 +114,6 @@ fun MainMenu(
         ) {
             Text(
                 text = stringResource(R.string.start),
-                fontWeight = FontWeight.Bold
             )
         }
         Button(
@@ -124,16 +122,18 @@ fun MainMenu(
         ) {
             Text(
                 text = stringResource(R.string.read_the_rules),
-                fontWeight = FontWeight.Bold
             )
         }
         Button(
-            onClick = { onEndClick() },
+            onClick = {
+                val activity = MainActivity()
+                activity.finish()
+                exitProcess(0)
+            },
             modifier = Modifier.width(250.dp),
         ) {
             Text(
                 text = stringResource(R.string.end),
-                fontWeight = FontWeight.Bold
             )
         }
     }
@@ -178,7 +178,9 @@ fun Rules(
 }
 
 @Composable
-fun Game() {
+fun Game(
+    returnToMainMenu: () -> Unit
+) {
     var gameState by remember { mutableStateOf("Input amount") }
     var amountOfPlayers by remember { mutableStateOf("") }
     val playerList = remember { mutableStateListOf<Player>() }
@@ -186,7 +188,7 @@ fun Game() {
     var nameOfPlayer by remember { mutableStateOf("") }
     var counter by remember { mutableStateOf(0) }
 
-        when (gameState) {
+    when (gameState) {
 
         "Input amount" -> {
 
@@ -321,6 +323,7 @@ fun Game() {
             loosePlayers.addAll(firedPlayers)
             winnerPlayers.removeAll(loosePlayers)
 
+            Spacer(modifier = Modifier.height(5.dp))
             Column {
                 LazyColumn {
                     items(winnerPlayers) {
@@ -334,6 +337,18 @@ fun Game() {
                         Row {
                             PlayerInfoScore(player = it)
                         }
+                    }
+                }
+
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    Button(
+                        onClick = returnToMainMenu,
+                    ) {
+                        Text(text = stringResource(id = R.string.return_to_main_menu))
                     }
                 }
             }
@@ -378,13 +393,13 @@ fun PlayerInfo(
     player: Player,
     modifier: Modifier = Modifier
 ) {
-    Card(modifier = modifier) {
+    Card(modifier = modifier.padding(4.dp)) {
         Row {
             Image(
                 painter = painterResource(id = R.drawable.anonymous_user),
                 contentDescription = null,
                 modifier = Modifier
-                    .size(68.dp)
+                    .size(32.dp)
                     .padding(4.dp)
                     .clip(MaterialTheme.shapes.small),
             )
@@ -404,7 +419,7 @@ fun PlayerInfoScore(
     color: Color = MaterialTheme.colorScheme.surfaceVariant
 ) {
     Card(
-        modifier = modifier,
+        modifier = modifier.padding(4.dp),
         colors = CardDefaults.cardColors(
             containerColor = color,
         )
