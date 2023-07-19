@@ -75,7 +75,7 @@ fun BlackJackApp() {
         when(page) {
             "MainMenu" -> MainMenu({page = "Game"}, {page = "Rules"}, {})
             "Rules" -> Rules({ page = "MainMenu" })
-            "Game" -> Game { page = "Result" }
+            "Game" -> Game()
         }
     }
 }
@@ -162,7 +162,7 @@ fun Rules(
 }
 
 @Composable
-fun Game(onResult: () -> Unit) {
+fun Game() {
     var gameState by remember { mutableStateOf("Input amount") }
     var amountOfPlayers by remember { mutableStateOf("") }
     val playerList = remember { mutableStateListOf<Player>() }
@@ -260,7 +260,7 @@ fun Game(onResult: () -> Unit) {
                                 currentPlayerSumaCards = 0
                                 currentPlayerCardCollection.clear()
                             } else  {
-                                onResult()
+                                gameState = "Result"
                             }
                         },
                         modifier = Modifier
@@ -278,7 +278,7 @@ fun Game(onResult: () -> Unit) {
                         currentPlayerSumaCards = 0
                         currentPlayerCardCollection.clear()
                     } else  {
-                        onResult()
+                        gameState = "Result"
                     }
                 }
             }
@@ -303,6 +303,23 @@ fun Game(onResult: () -> Unit) {
             loosePlayers.sortDescending()
             loosePlayers.addAll(firedPlayers)
             winnerPlayers.removeAll(loosePlayers)
+            
+            Column() {
+                LazyColumn() { 
+                    items(winnerPlayers) { 
+                        Row() {
+                            PlayerInfo(player = it)
+                        }
+                    }
+                }
+                LazyColumn() {
+                    items(loosePlayers) {
+                        Row() {
+                            PlayerInfo(player = it)
+                        }
+                    }
+                }
+            }
         }
     }
 }
@@ -358,8 +375,7 @@ fun PlayerInfo(
     modifier: Modifier = Modifier
 ) {
     Card(modifier = modifier) {
-        Column {
-            Text(text = "Player${player.id} : ${player.name}")
+        Row {
             Image(
                 painter = painterResource(id = R.drawable.anonymous_user),
                 contentDescription = null,
@@ -367,6 +383,8 @@ fun PlayerInfo(
                     .width(62.dp)
                     .height(62.dp),
             )
+            Text(text = "Player${player.id} : ${player.name}")
+
         }
     }
 }
