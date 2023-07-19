@@ -339,15 +339,17 @@ fun TextFieldWithButton(
         verticalArrangement = Arrangement.Center,
         modifier = Modifier.fillMaxSize()
     ) {
-        TextField(
-            value = value!!,
-            label = { Text(text = stringResource(id = textFieldLabel))},
-            onValueChange =  onValueChange,
-            singleLine = true,
-            modifier = Modifier.fillMaxWidth(),
-            keyboardOptions = keyboardOptions
+        if(textButton != R.string.start) {
+            TextField(
+                value = value!!,
+                label = { Text(text = stringResource(id = textFieldLabel)) },
+                onValueChange = onValueChange,
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth(),
+                keyboardOptions = keyboardOptions
             )
-        Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
+        }
         Button(onClick = onButtonClick) {
             Text(text = stringResource(textButton))
         }
