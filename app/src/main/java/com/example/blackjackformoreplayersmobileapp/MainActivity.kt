@@ -392,5 +392,8 @@ fun PlayerInfo(
 @Preview(showBackground = true)
 @Composable
 fun BlackJackAppPreview() {
-    BlackJackApp()
+    BlackJackForMorePlayersMobileAppTheme() {
+        BlackJackApp()
+    }
+
 }
