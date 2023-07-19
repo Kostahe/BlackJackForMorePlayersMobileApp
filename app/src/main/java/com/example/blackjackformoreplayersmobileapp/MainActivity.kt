@@ -76,7 +76,6 @@ fun BlackJackApp() {
             "MainMenu" -> MainMenu({page = "Game"}, {page = "Rules"}, {})
             "Rules" -> Rules({ page = "MainMenu" })
             "Game" -> Game { page = "Result" }
-            "Result" -> Result()
         }
     }
 }
@@ -284,13 +283,30 @@ fun Game(onResult: () -> Unit) {
                 }
             }
         }
+        "Result" -> {
+            val loosePlayers = mutableListOf<Player>()
+            val firedPlayers = mutableListOf<Player>()
+            val winnerPlayers = mutableListOf<Player>()
+
+
+            playerList.forEach { player ->
+                if(player.sumaValueCards > 21)
+                    firedPlayers.add(player)
+                else
+                    winnerPlayers.add(player)
+            }
+            val maxPointsOfPlayer: Int = winnerPlayers.max().sumaValueCards
+            playerList.forEach { player ->
+                if (player.sumaValueCards != maxPointsOfPlayer)
+                    loosePlayers.add(player)
+            }
+            loosePlayers.sortDescending()
+            loosePlayers.addAll(firedPlayers)
+            winnerPlayers.removeAll(loosePlayers)
+        }
     }
 }
 
-@Composable
-fun Result() {
-
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
