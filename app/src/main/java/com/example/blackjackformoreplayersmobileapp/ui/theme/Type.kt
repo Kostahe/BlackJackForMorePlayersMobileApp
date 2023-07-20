@@ -1,6 +1,7 @@
 package com.example.blackjackformoreplayersmobileapp.ui.theme
 
 import androidx.compose.material3.Typography
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -21,7 +22,8 @@ val Typography = Typography(
     displayLarge = TextStyle(
         fontFamily = AbrilFatFace,
         fontWeight = FontWeight.Normal,
-        fontSize = 50.sp
+        fontSize = 50.sp,
+        color = Color.White
     ),
     displayMedium = TextStyle(
         fontFamily = Monserrat,

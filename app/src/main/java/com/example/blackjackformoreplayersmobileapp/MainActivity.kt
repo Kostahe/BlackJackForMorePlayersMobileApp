@@ -160,8 +160,7 @@ fun Rules(
             Text(
                 text = stringResource(R.string.the_rules),
                 style = MaterialTheme.typography.displayLarge,
-
-                )
+            )
         }
         Text(
             text = stringResource(R.string.rules),
@@ -309,22 +308,41 @@ fun Game(
             val winnerPlayers = mutableListOf<Player>()
 
             playerList.forEach { player ->
-                if(player.sumaValueCards > 21)
+                if (player.sumaValueCards > 21)
                     firedPlayers.add(player)
                 else
                     winnerPlayers.add(player)
             }
-            val maxPointsOfPlayer: Int = winnerPlayers.max().sumaValueCards
-            winnerPlayers.forEach { player ->
-                if (player.sumaValueCards != maxPointsOfPlayer)
-                    loosePlayers.add(player)
+            if (winnerPlayers.size > 0) {
+                val maxPointsOfPlayer: Int = winnerPlayers.max().sumaValueCards
+                winnerPlayers.forEach { player ->
+                    if (player.sumaValueCards != maxPointsOfPlayer)
+                        loosePlayers.add(player)
+                }
             }
             loosePlayers.sortDescending()
             loosePlayers.addAll(firedPlayers)
             winnerPlayers.removeAll(loosePlayers)
 
-            Spacer(modifier = Modifier.height(5.dp))
-            Column {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Image(
+                        painter = painterResource(id = R.drawable.menu_48px),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .padding(4.dp)
+                            .size(50.dp)
+                    )
+                    Text(
+                        text = stringResource(R.string.score_board),
+                        style = MaterialTheme.typography.displayLarge
+                    )
+                }
                 LazyColumn {
                     items(winnerPlayers) {
                         Row {
