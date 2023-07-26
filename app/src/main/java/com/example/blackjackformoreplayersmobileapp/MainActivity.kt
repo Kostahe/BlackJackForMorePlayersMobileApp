@@ -236,7 +236,6 @@ fun Game(
                         PlayerInfo(player = it)
                     }
                 }
-
             }
         "Game" -> {
             var currentPlayerIndex by remember { mutableStateOf(0) }
