@@ -1,4 +1,4 @@
-package com.example.blackjackformoreplayersmobileapp.classes
+package com.example.blackjackformoreplayersmobileapp.model
 
 class Player(var name: String, val id: Int) : Comparable<Player> {
     var sumaValueCards = 0

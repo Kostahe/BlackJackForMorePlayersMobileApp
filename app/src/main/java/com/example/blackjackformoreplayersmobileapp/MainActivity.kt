@@ -47,10 +47,10 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.blackjackformoreplayersmobileapp.classes.Player
+import com.example.blackjackformoreplayersmobileapp.model.Player
 import com.example.blackjackformoreplayersmobileapp.ui.theme.BlackJackForMorePlayersMobileAppTheme
 import kotlin.system.exitProcess
-import com.example.blackjackformoreplayersmobileapp.classes.Card as CardClass
+import com.example.blackjackformoreplayersmobileapp.model.Card as CardClass
 
 
 class MainActivity : ComponentActivity() {
