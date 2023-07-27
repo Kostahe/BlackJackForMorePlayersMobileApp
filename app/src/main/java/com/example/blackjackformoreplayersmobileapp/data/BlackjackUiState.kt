@@ -11,5 +11,4 @@ data class BlackjackUiState(
     val nameOfPlayer: String = "",
     val counterOfPlayers: Int = 1,
     val currentPlayerIndex: Int = 0,
-    var currentPlayerSumaCard: Int = 0
 )

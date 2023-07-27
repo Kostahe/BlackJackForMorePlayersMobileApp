@@ -1,5 +1,9 @@
 package com.example.blackjackformoreplayersmobileapp.ui
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.blackjackformoreplayersmobileapp.data.BlackjackUiState
 import com.example.blackjackformoreplayersmobileapp.model.Card
@@ -14,8 +18,8 @@ class BlackjackViewModel : ViewModel() {
     val uiState: StateFlow<BlackjackUiState> = _uiState.asStateFlow()
 
     private lateinit var _currentPlayer: Player
-    private lateinit var _currentPlayerCardCollection: MutableList<Card>
-
+    private var _currentPlayerCardCollection = mutableStateListOf<Card>()
+    private var _currentPlayerSumValueCards by mutableStateOf(0)
 
     private val cardsList = Card.generateCardList()
 
@@ -45,23 +49,23 @@ class BlackjackViewModel : ViewModel() {
 
     fun updateCurrentPlayer() {
         _currentPlayer = uiState.value.playerList[_uiState.value.currentPlayerIndex]
-        _currentPlayerCardCollection = _currentPlayer.cardCollection
+        _currentPlayerCardCollection.retainAll(_currentPlayer.cardCollection)
+        _currentPlayerSumValueCards = 0
         _uiState.update { currentState ->
             currentState.copy(
-                currentPlayerSumaCard = uiState.value.playerList[_uiState.value.currentPlayerIndex].sumValueCards,
-                currentPlayerIndex = uiState.value.currentPlayerIndex.inc()
+                currentPlayerIndex = uiState.value.currentPlayerIndex.inc(),
             )
         }
     }
 
     fun getCurrentPlayer() = _currentPlayer
     fun getCurrentPlayerCardCollection() = _currentPlayerCardCollection
-    fun getCurrentPlayerSumaCards() = _uiState.value.currentPlayerSumaCard
+    fun getCurrentPlayerSumaCards() = _currentPlayerSumValueCards
 
     fun hit() {
-
         _currentPlayer.takeCard(cardsList)
         _currentPlayerCardCollection.add(_currentPlayer.cardCollection.last())
-        _uiState.value.currentPlayerSumaCard = _currentPlayer.sumValueCards
+        _currentPlayerSumValueCards = _currentPlayer.sumValueCards
     }
 }
+

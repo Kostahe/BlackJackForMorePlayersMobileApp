@@ -46,7 +46,7 @@ fun Game(
                 Image(painter = painterResource(id = card.cardImage), contentDescription = null)
             }
         }
-        Text(text = "Suma is: " + currentPlayer.sumValueCards)
+        Text(text = "Suma is: $currentPlayerSumaCards")
         if (currentPlayerSumaCards <= 21) {
             Row(modifier = Modifier.width(200.dp)) {
                 Button(
@@ -61,7 +61,7 @@ fun Game(
                 }
                 Button(
                     onClick = {
-                        if (currentPlayerIndex + 1 < playerList.size) nextPlayer()
+                        if (currentPlayerIndex < playerList.size) nextPlayer()
                         else nextPage()
                     },
                     modifier = Modifier
