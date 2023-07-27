@@ -38,7 +38,7 @@ fun PlayerInfoScore(
                 painter = painterResource(id = R.drawable.anonymous_user),
                 contentDescription = null,
                 modifier = Modifier
-                    .size(32.dp)
+                    .size(40.dp)
                     .padding(4.dp)
                     .clip(MaterialTheme.shapes.small),
             )
@@ -54,7 +54,9 @@ fun PlayerInfoScore(
                     Image(
                         painter = painterResource(id = card.cardImage),
                         contentDescription = null,
-                        modifier = Modifier.size(32.dp)
+                        modifier = Modifier
+                            .size(36.dp)
+                            .padding(top = 4.dp)
                     )
                 }
             }
