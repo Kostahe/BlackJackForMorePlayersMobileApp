@@ -368,7 +368,6 @@ fun Game(
                 Column(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.fillMaxSize()
                 ) {
                     Button(
                         onClick = returnToMainMenu,

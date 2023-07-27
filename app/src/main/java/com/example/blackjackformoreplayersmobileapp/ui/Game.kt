@@ -19,13 +19,11 @@ import androidx.compose.ui.unit.dp
 import com.example.blackjackformoreplayersmobileapp.R
 import com.example.blackjackformoreplayersmobileapp.model.Card
 import com.example.blackjackformoreplayersmobileapp.model.Player
-
 @Composable
 fun Game(
     currentPlayer: Player,
     currentPlayerCardCollection: MutableList<Card>,
     currentPlayerSumaCards: Int,
-    cardsList: MutableList<Card>,
     currentPlayerIndex: Int,
     playerList: MutableList<Player>,
     onHitButtonClick: () -> Unit,
@@ -47,6 +45,7 @@ fun Game(
             }
         }
         Text(text = "Suma is: $currentPlayerSumaCards")
+
         if (currentPlayerSumaCards <= 21) {
             Row(modifier = Modifier.width(200.dp)) {
                 Button(
@@ -72,9 +71,8 @@ fun Game(
                 }
             }
         } else {
-            if (currentPlayerIndex + 1 < playerList.size) {
-                nextPlayer()
-            } else {
+            if (currentPlayerIndex < playerList.size) nextPlayer()
+            else {
                 nextPage()
             }
         }

@@ -67,5 +67,40 @@ class BlackjackViewModel : ViewModel() {
         _currentPlayerCardCollection.add(_currentPlayer.cardCollection.last())
         _currentPlayerSumValueCards = _currentPlayer.sumValueCards
     }
+
+    fun determineWinner(playerList: MutableList<Player>) {
+        playerList.forEach { player ->
+            if (player.sumValueCards > 21)
+                uiState.value.firedPlayers.add(player)
+            else
+                _uiState.value.winnerPlayer.add(player)
+        }
+        if (_uiState.value.winnerPlayer.isNotEmpty()) {
+            val maxPointsOfPlayer: Int = _uiState.value.winnerPlayer.max().sumValueCards
+            _uiState.value.winnerPlayer.forEach { player ->
+                if (player.sumValueCards != maxPointsOfPlayer)
+                    _uiState.value.loosePlayers.add(player)
+            }
+        }
+        _uiState.value.loosePlayers.sortDescending()
+        _uiState.value.loosePlayers.addAll(_uiState.value.firedPlayers)
+        _uiState.value.winnerPlayer.removeAll(_uiState.value.loosePlayers)
+    }
+
+    fun resetGame() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                amountOfPlayers = "",
+                playerList = mutableStateListOf(),
+                cardsList = Card.generateCardList(),
+                nameOfPlayer = "",
+                counterOfPlayers = 1,
+                currentPlayerIndex = 0,
+                loosePlayers = mutableListOf(),
+                firedPlayers = mutableListOf(),
+                winnerPlayer = mutableListOf()
+            )
+        }
+    }
 }
 

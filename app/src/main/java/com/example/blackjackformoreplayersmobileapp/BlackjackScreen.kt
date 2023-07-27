@@ -9,7 +9,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.blackjackformoreplayersmobileapp.model.Player
 import com.example.blackjackformoreplayersmobileapp.ui.BlackjackViewModel
@@ -17,6 +16,7 @@ import com.example.blackjackformoreplayersmobileapp.ui.Game
 import com.example.blackjackformoreplayersmobileapp.ui.InputAmountOfPlayer
 import com.example.blackjackformoreplayersmobileapp.ui.InputNameOfPlayer
 import com.example.blackjackformoreplayersmobileapp.ui.MainMenu
+import com.example.blackjackformoreplayersmobileapp.ui.Result
 import com.example.blackjackformoreplayersmobileapp.ui.Rules
 
 enum class BlackjackScreen {
@@ -28,10 +28,6 @@ fun BlackjackScreen(
     viewModel: BlackjackViewModel = viewModel(),
     navController: NavHostController = rememberNavController()
 ) {
-    val backStackEntry by navController.currentBackStackEntryAsState()
-    val currentScreen = BlackjackScreen.valueOf(
-        backStackEntry?.destination?.route ?: BlackjackScreen.MainMenu.name
-    )
     val uiState by viewModel.uiState.collectAsState()
 
     NavHost(
@@ -64,7 +60,6 @@ fun BlackjackScreen(
                         BlackjackScreen.InputNameOfPlayers.name
                     )
                 },
-
                 modifier = Modifier.fillMaxSize()
             )
         }
@@ -98,18 +93,32 @@ fun BlackjackScreen(
                 currentPlayer = viewModel.getCurrentPlayer(),
                 currentPlayerCardCollection = viewModel.getCurrentPlayerCardCollection(),
                 currentPlayerSumaCards = viewModel.getCurrentPlayerSumaCards(),
-                cardsList = uiState.cardsList,
                 currentPlayerIndex = uiState.currentPlayerIndex,
                 playerList = uiState.playerList,
                 onHitButtonClick = { viewModel.hit() },
                 nextPlayer = { viewModel.updateCurrentPlayer() },
-                nextPage = { navController.navigate(BlackjackScreen.Result.name) },
+                nextPage = {
+                    if (uiState.loosePlayers.size < uiState.amountOfPlayers.toInt()) {
+                        viewModel.determineWinner(uiState.playerList)
+                        navController.navigate(BlackjackScreen.Result.name)
+                    }
+                },
                 modifier = Modifier.fillMaxSize()
             )
         }
 
         composable(route = BlackjackScreen.Result.name) {
+            Result(
+                winnerPlayers = uiState.winnerPlayer,
+                loosePlayers = uiState.loosePlayers,
+                onReturnButtonClick = {
+                    viewModel.resetGame()
+                    navController.popBackStack(BlackjackScreen.MainMenu.name, inclusive = false)
+                },
+                modifier = Modifier.fillMaxSize()
+            )
         }
     }
 }
+
 

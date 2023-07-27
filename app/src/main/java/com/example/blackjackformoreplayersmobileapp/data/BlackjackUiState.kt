@@ -11,4 +11,7 @@ data class BlackjackUiState(
     val nameOfPlayer: String = "",
     val counterOfPlayers: Int = 1,
     val currentPlayerIndex: Int = 0,
+    val loosePlayers: MutableList<Player> = mutableListOf(),
+    val firedPlayers: MutableList<Player> = mutableListOf(),
+    val winnerPlayer: MutableList<Player> = mutableListOf()
 )
