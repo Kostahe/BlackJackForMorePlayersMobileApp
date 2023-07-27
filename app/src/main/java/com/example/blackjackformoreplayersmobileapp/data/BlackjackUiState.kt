@@ -6,8 +6,10 @@ import com.example.blackjackformoreplayersmobileapp.model.Player
 
 data class BlackjackUiState(
     val amountOfPlayers: String = "",
-    val playerList: MutableList<Player> = mutableStateListOf<Player>(),
-    val cardsList: List<Card> = Card.generateCardList(),
+    val playerList: MutableList<Player> = mutableStateListOf(),
+    val cardsList: MutableList<Card> = Card.generateCardList(),
     val nameOfPlayer: String = "",
-    val counter: Int = 0,
+    val counterOfPlayers: Int = 1,
+    val currentPlayerIndex: Int = 0,
+    var currentPlayerSumaCard: Int = 0
 )

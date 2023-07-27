@@ -62,7 +62,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background,
                 ) {
-                    BlackJackApp()
+                    BlackjackScreen()
                 }
             }
         }
@@ -73,7 +73,12 @@ class MainActivity : ComponentActivity() {
 fun BlackJackApp() {
     var page by remember { mutableStateOf("MainMenu") }
     Box {
-        Image(painter = painterResource(id = R.drawable.black_jack_menu2), contentDescription = null, contentScale = ContentScale.Crop, modifier = Modifier.fillMaxHeight())
+        Image(
+            painter = painterResource(id = R.drawable.black_jack_menu),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.fillMaxHeight()
+        )
         when(page) {
             "MainMenu" -> MainMenu({ page = "Game" }, { page = "Rules" })
             "Rules" -> Rules({ page = "MainMenu" })
@@ -241,7 +246,7 @@ fun Game(
             var currentPlayerIndex by remember { mutableStateOf(0) }
             var currentPlayer by remember{ mutableStateOf(playerList[currentPlayerIndex]) }
             val currentPlayerCardCollection = remember { mutableStateListOf<CardClass>() }
-            var currentPlayerSumaCards by remember { mutableStateOf(currentPlayer.sumaValueCards) }
+            var currentPlayerSumaCards by remember { mutableStateOf(currentPlayer.sumValueCards) }
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
@@ -252,17 +257,20 @@ fun Game(
 
                 LazyColumn {
                     items(currentPlayerCardCollection) { card ->
-                        Text(text = card.toString())
+                        Image(
+                            painter = painterResource(id = card.cardImage),
+                            contentDescription = null
+                        )
                     }
                 }
-                Text(text = "Suma is: " + currentPlayer.sumaValueCards)
+                Text(text = "Suma is: " + currentPlayer.sumValueCards)
                 if (currentPlayerSumaCards <= 21) {
                     Row(modifier = Modifier.width(200.dp)) {
                         Button(
                             onClick = {
                             currentPlayer.takeCard(cardsList)
                             currentPlayerCardCollection.add(currentPlayer.cardCollection.last())
-                            currentPlayerSumaCards = currentPlayer.sumaValueCards
+                                currentPlayerSumaCards = currentPlayer.sumValueCards
                         },
                         modifier = Modifier
                             .weight(1f)
@@ -307,15 +315,15 @@ fun Game(
             val winnerPlayers = mutableListOf<Player>()
 
             playerList.forEach { player ->
-                if (player.sumaValueCards > 21)
+                if (player.sumValueCards > 21)
                     firedPlayers.add(player)
                 else
                     winnerPlayers.add(player)
             }
             if (winnerPlayers.size > 0) {
-                val maxPointsOfPlayer: Int = winnerPlayers.max().sumaValueCards
+                val maxPointsOfPlayer: Int = winnerPlayers.max().sumValueCards
                 winnerPlayers.forEach { player ->
-                    if (player.sumaValueCards != maxPointsOfPlayer)
+                    if (player.sumValueCards != maxPointsOfPlayer)
                         loosePlayers.add(player)
                 }
             }
@@ -459,7 +467,7 @@ fun PlayerInfoScore(
 
             Spacer(modifier = Modifier.weight(1f))
             Text(
-                text = player.sumaValueCards.toString(),
+                text = player.sumValueCards.toString(),
                 style = MaterialTheme.typography.displayMedium,
                 modifier = Modifier.padding(top = 4.dp, end = 8.dp)
             )
