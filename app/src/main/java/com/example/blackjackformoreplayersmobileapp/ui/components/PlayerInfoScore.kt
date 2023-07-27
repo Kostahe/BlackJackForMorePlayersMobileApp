@@ -61,7 +61,7 @@ fun PlayerInfoScore(
             Text(
                 text = player.sumValueCards.toString(),
                 style = MaterialTheme.typography.displayMedium,
-                modifier = Modifier.padding(top = 4.dp, end = 8.dp)
+                modifier = Modifier.padding(start = 4.dp, top = 4.dp, end = 8.dp)
             )
         }
     }

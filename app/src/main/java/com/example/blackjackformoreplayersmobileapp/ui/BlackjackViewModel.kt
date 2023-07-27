@@ -101,6 +101,9 @@ class BlackjackViewModel : ViewModel() {
     }
 
     fun determineWinner(playerList: MutableList<Player>) {
+        uiState.value.loosePlayers.clear()
+        uiState.value.firedPlayers.clear()
+        uiState.value.winnerPlayer.clear()
         playerList.forEach { player ->
             if (player.sumValueCards > 21)
                 uiState.value.firedPlayers.add(player)
