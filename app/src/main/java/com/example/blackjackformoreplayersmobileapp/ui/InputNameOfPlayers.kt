@@ -27,7 +27,7 @@ import com.example.blackjackformoreplayersmobileapp.ui.components.PlayerInfo
 @Composable
 fun InputNameOfPlayer(
     value: String,
-    isValueWrong: () -> Unit,
+    isValueWrong: Boolean,
     onValueChange: (String) -> Unit,
     onEnterButtonClick: () -> Unit,
     playerList: MutableList<Player>,
@@ -43,14 +43,18 @@ fun InputNameOfPlayer(
         if (counterOfPlayers - 1 != amountOfPlayers) {
             TextField(
                 value = value,
-                label = { Text(text = stringResource(id = R.string.input_name_of_player)) },
+                label = {
+                    if (!isValueWrong) Text(text = stringResource(id = R.string.input_name_of_player))
+                    else Text(text = stringResource(R.string.name_cannot_be_empty))
+                },
                 onValueChange = onValueChange,
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Text,
                     imeAction = ImeAction.Done
-                )
+                ),
+                isError = isValueWrong
             )
         }
 

@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -14,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.blackjackformoreplayersmobileapp.R
 import com.example.blackjackformoreplayersmobileapp.model.Player
@@ -38,15 +41,23 @@ fun PlayerInfoScore(
                     .size(32.dp)
                     .padding(4.dp)
                     .clip(MaterialTheme.shapes.small),
-
-                )
+            )
             Text(
-                text = "Player${player.id}: ${player.name}",
+                text = stringResource(R.string.player_playerId_playerName, player.id, player.name),
                 style = MaterialTheme.typography.displayMedium,
                 modifier = Modifier.padding(top = 4.dp)
             )
 
             Spacer(modifier = Modifier.weight(1f))
+            LazyRow {
+                items(player.cardCollection) { card ->
+                    Image(
+                        painter = painterResource(id = card.cardImage),
+                        contentDescription = null,
+                        modifier = Modifier.size(32.dp)
+                    )
+                }
+            }
             Text(
                 text = player.sumValueCards.toString(),
                 style = MaterialTheme.typography.displayMedium,

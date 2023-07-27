@@ -8,11 +8,16 @@
     <string name="input_name_of_player">Input name of player</string>
     <string name="enter">Enter</string>
     <string name="input_amount_of_players">Input amount of players</string>
-    <string name="rules">1. Black jack players are scored by their total cards value. The player with the highest total cards value wins as long as it doesn\'t exceed 21. The players with a highest totals than 21 are said to bust.\n\n2. Amount of players that can play is between 2–7.\n\n3. Ace is 11.</string>
+    <string name="rules">1. Black jack players are scored by their total cards value. The player with the highest total cards value wins as long as it doesn\'t exceed 21. The players with a highest totals than 21 are said to bust.\n\n2. Amount of players that can play is between 2–5.\n\n3. Ace is 11.</string>
     <string name="return_to_main_menu">Return to main menu</string>
     <string name="your_cards_are">"Your cards are: "</string>
     <string name="hit">Hit</string>
     <string name="stand">Stand</string>
     <string name="the_rules">The rules</string>
     <string name="score_board">Score board</string>
+    <string name="amount_of_players_must_be_in_range_2_5_and_must_be_integer">Amount of players must be in range 2-5 and must be integer</string>
+    <string name="suma_is_">Suma is: %d</string>
+    <string name="player_now_plays">%s now plays!</string>
+    <string name="name_cannot_be_empty">Name cannot be empty</string>
+    <string name="player_playerId_playerName">Player%d: %s</string>
 </resources>

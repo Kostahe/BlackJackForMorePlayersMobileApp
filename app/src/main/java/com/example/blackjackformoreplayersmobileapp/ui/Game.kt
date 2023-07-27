@@ -36,7 +36,7 @@ fun Game(
         verticalArrangement = Arrangement.Center,
         modifier = modifier
     ) {
-        Text(text = currentPlayer.name + " now plays!")
+        Text(text = stringResource(R.string.player_now_plays, currentPlayer.name))
         Text(text = stringResource(R.string.your_cards_are))
 
         LazyRow {
@@ -44,8 +44,7 @@ fun Game(
                 Image(painter = painterResource(id = card.cardImage), contentDescription = null)
             }
         }
-        Text(text = "Suma is: $currentPlayerSumaCards")
-
+        Text(text = stringResource(R.string.suma_is_, currentPlayerSumaCards))
         if (currentPlayerSumaCards <= 21) {
             Row(modifier = Modifier.width(200.dp)) {
                 Button(

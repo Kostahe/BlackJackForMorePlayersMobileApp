@@ -36,7 +36,7 @@ class BlackjackViewModel : ViewModel() {
     }
 
     fun addPlayer(player: Player) {
-        _uiState.value.playerList.add(player)
+        uiState.value.playerList.add(player)
     }
 
     fun updateCounterOfPlayer() {
@@ -44,6 +44,38 @@ class BlackjackViewModel : ViewModel() {
             currentState.copy(
                 counterOfPlayers = _uiState.value.counterOfPlayers.inc()
             )
+        }
+    }
+
+    fun checkInputAmountOfPlayers() {
+        if (uiState.value.amountOfPlayers.toIntOrNull() in 2..7) {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    isAmountOfPlayersWrong = false
+                )
+            }
+        } else {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    isAmountOfPlayersWrong = true
+                )
+            }
+        }
+    }
+
+    fun checkInputNameOfPlayers() {
+        if (_uiState.value.nameOfPlayer.isNotBlank()) {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    isNameOfPlayerWrong = false
+                )
+            }
+        } else {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    isNameOfPlayerWrong = true
+                )
+            }
         }
     }
 
@@ -73,18 +105,18 @@ class BlackjackViewModel : ViewModel() {
             if (player.sumValueCards > 21)
                 uiState.value.firedPlayers.add(player)
             else
-                _uiState.value.winnerPlayer.add(player)
+                uiState.value.winnerPlayer.add(player)
         }
-        if (_uiState.value.winnerPlayer.isNotEmpty()) {
+        if (uiState.value.winnerPlayer.isNotEmpty()) {
             val maxPointsOfPlayer: Int = _uiState.value.winnerPlayer.max().sumValueCards
-            _uiState.value.winnerPlayer.forEach { player ->
+            uiState.value.winnerPlayer.forEach { player ->
                 if (player.sumValueCards != maxPointsOfPlayer)
-                    _uiState.value.loosePlayers.add(player)
+                    uiState.value.loosePlayers.add(player)
             }
         }
-        _uiState.value.loosePlayers.sortDescending()
-        _uiState.value.loosePlayers.addAll(_uiState.value.firedPlayers)
-        _uiState.value.winnerPlayer.removeAll(_uiState.value.loosePlayers)
+        uiState.value.loosePlayers.sortDescending()
+        uiState.value.loosePlayers.addAll(_uiState.value.firedPlayers)
+        uiState.value.winnerPlayer.removeAll(_uiState.value.loosePlayers)
     }
 
     fun resetGame() {

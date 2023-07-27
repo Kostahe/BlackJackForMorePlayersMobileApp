@@ -23,7 +23,7 @@ import com.example.blackjackformoreplayersmobileapp.R
 @Composable
 fun InputAmountOfPlayer(
     value: String,
-    isValueWrong: () -> Unit,
+    isValueWrong: Boolean,
     onValueChange: (String) -> Unit,
     onEnterButtonClick: () -> Unit,
 
@@ -37,21 +37,25 @@ fun InputAmountOfPlayer(
 
         TextField(
             value = value,
-            label = { Text(text = stringResource(id = R.string.input_amount_of_players)) },
+            label = {
+                if (!isValueWrong) Text(text = stringResource(id = R.string.input_amount_of_players))
+                else Text(stringResource(R.string.amount_of_players_must_be_in_range_2_5_and_must_be_integer))
+            },
             onValueChange = onValueChange,
             singleLine = true,
             modifier = Modifier.fillMaxWidth(),
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Number,
                 imeAction = ImeAction.Done
-            )
+            ),
+            isError = isValueWrong
         )
         Spacer(modifier = Modifier.height(16.dp))
 
-        Button(onClick = onEnterButtonClick) {
+        Button(
+            onClick = onEnterButtonClick
+        ) {
             Text(text = stringResource(id = R.string.enter))
         }
     }
-
-
 }

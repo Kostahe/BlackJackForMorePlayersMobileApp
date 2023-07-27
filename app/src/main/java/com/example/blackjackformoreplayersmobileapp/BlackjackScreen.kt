@@ -53,12 +53,12 @@ fun BlackjackScreen(
         composable(route = BlackjackScreen.InputAmountOfPlayers.name) {
             InputAmountOfPlayer(
                 value = uiState.amountOfPlayers,
-                isValueWrong = {},
+                isValueWrong = uiState.isAmountOfPlayersWrong,
                 onValueChange = { viewModel.setAmountOfPlayers(it) },
                 onEnterButtonClick = {
-                    if (uiState.amountOfPlayers.toIntOrNull() in 2..7) navController.navigate(
-                        BlackjackScreen.InputNameOfPlayers.name
-                    )
+                    viewModel.checkInputAmountOfPlayers()
+                    if (uiState.amountOfPlayers.toIntOrNull() in 2..7)
+                        navController.navigate(BlackjackScreen.InputNameOfPlayers.name)
                 },
                 modifier = Modifier.fillMaxSize()
             )
@@ -67,9 +67,10 @@ fun BlackjackScreen(
         composable(route = BlackjackScreen.InputNameOfPlayers.name) {
             InputNameOfPlayer(
                 value = uiState.nameOfPlayer,
-                isValueWrong = {},
+                isValueWrong = uiState.isNameOfPlayerWrong,
                 onValueChange = { viewModel.setNameOfPlayer(it) },
                 onEnterButtonClick = {
+                    viewModel.checkInputNameOfPlayers()
                     if (uiState.nameOfPlayer.isNotBlank() && uiState.counterOfPlayers <= uiState.amountOfPlayers.toInt()) {
                         viewModel.updateCounterOfPlayer()
                         val player = Player(uiState.nameOfPlayer, uiState.counterOfPlayers)
