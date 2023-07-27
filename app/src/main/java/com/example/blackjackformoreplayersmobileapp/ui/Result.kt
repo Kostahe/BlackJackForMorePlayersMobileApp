@@ -19,9 +19,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.example.blackjackformoreplayersmobileapp.PlayerInfoScore
 import com.example.blackjackformoreplayersmobileapp.R
 import com.example.blackjackformoreplayersmobileapp.model.Player
+import com.example.blackjackformoreplayersmobileapp.ui.components.PlayerInfoScore
 
 @Composable
 fun Result(
